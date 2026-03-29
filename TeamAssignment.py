@@ -1,6 +1,8 @@
 from constraint import Problem, AllDifferentConstraint
 
 
+
+
 players = [
     {"name": "Alisson", "pos_prefs": {"GK": 1}, "foot": "Right"},
     {"name": "Nikolaj", "pos_prefs": {"LB": 1, }, "foot": "Right"},
