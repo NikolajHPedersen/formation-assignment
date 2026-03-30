@@ -1,0 +1,156 @@
+[
+    {
+        "name": "Joan Garcia",
+        "preferred_positions": ["GK", "LW", "RW"],
+        "attributes": {
+            "goalkeeping": 84,
+            "pace": 42,
+            "shooting": 12,
+            "passing": 72,
+            "dribbling": 26,
+            "defending": 18,
+            "physical": 70
+        },
+        "foot": "right"
+    },
+    {
+        "name": "Gerard Martin",
+        "preferred_positions": ["LB", "CB"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 75,
+            "shooting": 55,
+            "passing": 71,
+            "dribbling": 73,
+            "defending": 76,
+            "physical": 73
+        },
+        "foot": "left"
+    },
+    {
+        "name": "Eric Garcia",
+        "preferred_positions": ["CB", "RB", "CDM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 64,
+            "shooting": 44,
+            "passing": 78,
+            "dribbling": 68,
+            "defending": 81,
+            "physical": 72
+        },
+        "foot": "right"
+    },
+    {
+        "name": "Pau Cubarsi",
+        "preferred_positions": ["CB"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 71,
+            "shooting": 40,
+            "passing": 82,
+            "dribbling": 70,
+            "defending": 85,
+            "physical": 74
+        },
+        "foot": "right"
+    },
+    {
+        "name": "Joao Cancelo",
+        "preferred_positions": ["RB", "LB"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 82,
+            "shooting": 68,
+            "passing": 83,
+            "dribbling": 85,
+            "defending": 78,
+            "physical": 72
+        },
+        "foot": "right"
+    },
+    {
+        "name": "Pedri",
+        "preferred_positions": ["CM", "CAM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 79,
+            "shooting": 74,
+            "passing": 89,
+            "dribbling": 91,
+            "defending": 66,
+            "physical": 66
+        },
+        "foot": "right"
+    },
+    {
+        "name": "Marc Bernal",
+        "preferred_positions": ["CM", "CDM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 68,
+            "shooting": 58,
+            "passing": 82,
+            "dribbling": 77,
+            "defending": 80,
+            "physical": 78
+        },
+        "foot": "right"
+    },
+    {
+        "name": "Fermin Lopez",
+        "preferred_positions": ["CM", "CAM", "RW"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 78,
+            "shooting": 78,
+            "passing": 82,
+            "dribbling": 84,
+            "defending": 60,
+            "physical": 68
+        },
+        "foot": "right"
+    },
+    {
+        "name": "Raphinha",
+        "preferred_positions": ["LW", "RW", "ST"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 86,
+            "shooting": 82,
+            "passing": 80,
+            "dribbling": 87,
+            "defending": 45,
+            "physical": 65
+        },
+        "foot": "left"
+    },
+    {
+        "name": "Robert Lewandowski",
+        "preferred_positions": ["ST"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 74,
+            "shooting": 90,
+            "passing": 76,
+            "dribbling": 84,
+            "defending": 38,
+            "physical": 82
+        },
+        "foot": "right"
+    },
+    {
+        "name": "Lamine Yamal",
+        "preferred_positions": ["RW", "ST", "LW"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 86,
+            "shooting": 82,
+            "passing": 83,
+            "dribbling": 92,
+            "defending": 42,
+            "physical": 60
+        },
+        "foot": "left"
+    }
+]

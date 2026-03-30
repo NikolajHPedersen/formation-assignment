@@ -1,0 +1,156 @@
+[
+    {
+        "name": "Gabe Hands",
+        "preferred_positions": ["GK"],
+        "attributes": {
+            "goalkeeping": 92,
+            "pace": 35,
+            "shooting": 12,
+            "passing": 68,
+            "dribbling": 28,
+            "defending": 19,
+            "physical": 75
+        },
+        "foot": "right"
+    },
+    {
+        "name": "CM One",
+        "preferred_positions": ["CM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 76,
+            "shooting": 69,
+            "passing": 84,
+            "dribbling": 82,
+            "defending": 79,
+            "physical": 80
+        },
+        "foot": "left"
+    },
+    {
+        "name": "CM Two",
+        "preferred_positions": ["CM"],
+        "attributes": {
+            "goalkeeping": 6,
+            "pace": 68,
+            "shooting": 70,
+            "passing": 92,
+            "dribbling": 81,
+            "defending": 75,
+            "physical": 76
+        },
+        "foot": "right"
+    },
+    {
+        "name": "CM Three",
+        "preferred_positions": ["CM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 81,
+            "shooting": 67,
+            "passing": 78,
+            "dribbling": 86,
+            "defending": 69,
+            "physical": 83
+        },
+        "foot": "left"
+    },
+    {
+        "name": "CM Four",
+        "preferred_positions": ["CM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 74,
+            "shooting": 80,
+            "passing": 77,
+            "dribbling": 73,
+            "defending": 85,
+            "physical": 78
+        },
+        "foot": "right"
+    },
+    {
+        "name": "CM Five",
+        "preferred_positions": ["CM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 66,
+            "shooting": 77,
+            "passing": 79,
+            "dribbling": 79,
+            "defending": 81,
+            "physical": 82
+        },
+        "foot": "left"
+    },
+    {
+        "name": "CM Six",
+        "preferred_positions": ["CM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 79,
+            "shooting": 73,
+            "passing": 90,
+            "dribbling": 74,
+            "defending": 83,
+            "physical": 74
+        },
+        "foot": "right"
+    },
+    {
+        "name": "CM Seven",
+        "preferred_positions": ["CM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 72,
+            "shooting": 65,
+            "passing": 81,
+            "dribbling": 80,
+            "defending": 74,
+            "physical": 85
+        },
+        "foot": "left"
+    },
+    {
+        "name": "CM Eight",
+        "preferred_positions": ["CM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 85,
+            "shooting": 74,
+            "passing": 88,
+            "dribbling": 72,
+            "defending": 78,
+            "physical": 81
+        },
+        "foot": "right"
+    },
+    {
+        "name": "CM Nine",
+        "preferred_positions": ["CM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 77,
+            "shooting": 66,
+            "passing": 85,
+            "dribbling": 76,
+            "defending": 82,
+            "physical": 79
+        },
+        "foot": "right"
+    },
+    {
+        "name": "CM Ten",
+        "preferred_positions": ["CM"],
+        "attributes": {
+            "goalkeeping": 5,
+            "pace": 69,
+            "shooting": 72,
+            "passing": 83,
+            "dribbling": 83,
+            "defending": 80,
+            "physical": 80
+        },
+        "foot": "left"
+    }
+]
