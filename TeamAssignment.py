@@ -1,3 +1,4 @@
+
 from constraint import Problem, AllDifferentConstraint
 
 players = [
