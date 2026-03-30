@@ -1,20 +1,27 @@
+
 from constraint import Problem, AllDifferentConstraint
 
-players2 = [
-    {"name": "Alisson", "pos_prefs": ["GK","CM","ST"], "foot": "Right"},
-    {"name": "Nikolaj", "pos_prefs": ["LW","RB","CM"], "foot": "Right"}, 
-    {"name": "Ederson", "pos_prefs": ["RB","RW","LB"], "foot": "Left"},  
-    {"name": "Robertson", "pos_prefs": ["LW","CM","CB"], "foot": "Left"},
-    {"name": "Walker", "pos_prefs": ["RB","ST","GK"], "foot": "Right"},
-    {"name": "Van Dijk", "pos_prefs": ["RB","LM","ST"], "foot": "Right"},
-    {"name": "Salah", "pos_prefs": ["RW", "CB","LB"], "foot": "Left"},
-    {"name": "Haaland", "pos_prefs": ["ST","RB","RM"], "foot": "Left"},
-    {"name": "Trent", "pos_prefs": ["RB", "CM", "LW"], "foot": "Right"},
-    {"name": "Messi", "pos_prefs": ["ST","CM","LB"],"foot": "Right"},
-    {"name": "Ronaldo", "pos_prefs": ["ST","CB","CM"], "foot": "Left"},
-    {"name": "Jordan", "pos_prefs": ["RM","LB", "LM"], "foot": "Left"},
-    {"name": "A", "pos_prefs": ["LB","CB","LM"],"foot":"Right"},
-    {"name": "B", "pos_prefs": ["CB","CM","ST"],"foot":"Right"}
+players = [
+    {"Id": 1,  "Lfoot": False, "Positions": ["ST",  "LCM", "GK"]},
+    {"Id": 2,  "Lfoot": False, "Positions": ["RST", "RCM", "RCB"]},
+    {"Id": 3,  "Lfoot": True,  "Positions": ["LST", "LCM", "LCB"]},
+    {"Id": 4,  "Lfoot": False, "Positions": ["RST", "RCM", "RB"]},
+    {"Id": 5,  "Lfoot": True,  "Positions": ["LST", "LM",  "LB"]},
+    {"Id": 6,  "Lfoot": False, "Positions": ["RST", "RM",  "RB"]},
+    {"Id": 7,  "Lfoot": False, "Positions": ["ST",  "RCM", "RCB"]},
+    {"Id": 8,  "Lfoot": False, "Positions": ["ST",  "LCM", "LCB"]},
+    {"Id": 9,  "Lfoot": True,  "Positions": ["LST", "LM",  "LCB"]},
+    {"Id": 10, "Lfoot": False, "Positions": ["RST", "RM",  "RCB"]},
+    {"Id": 11, "Lfoot": True,  "Positions": ["LST", "LM",  "LB"]},
+    {"Id": 12, "Lfoot": False, "Positions": ["RST", "RM",  "RB"]},
+    {"Id": 13, "Lfoot": True,  "Positions": ["LST", "LCM", "LCB"]},
+    {"Id": 14, "Lfoot": False, "Positions": ["RST", "RCM", "RCB"]},
+    {"Id": 15, "Lfoot": True,  "Positions": ["LST", "LM",  "LB"]},
+    {"Id": 16, "Lfoot": False, "Positions": ["RST", "RM",  "RB"]},
+    {"Id": 17, "Lfoot": False, "Positions": ["ST",  "RCM", "RB"]},
+    {"Id": 18, "Lfoot": True,  "Positions": ["ST",  "LCM", "LB"]},
+    {"Id": 19, "Lfoot": False, "Positions": ["RST", "RCM", "RCB"]},
+    {"Id": 20, "Lfoot": True,  "Positions": ["LST", "LCM", "LCB"]},
 ]
 '''
 GK = Goal keeper
@@ -32,67 +39,82 @@ RW = Right wing
 
 formation_obj = {"GK":1,"LB":1,"RB":1,"CB":2,"CM":1,"RM":1,"LM":1,"ST":1, "LW":1, "RW":1}
 
-def get_position_list(formation):
-    return list(formation_obj.keys())
+# Each slot has a capacity — how many players it needs
+formation_slots = {
+    "GK":  {"capacity": 1, "players": []},
+    "LB":  {"capacity": 1, "players": []},
+    "RB":  {"capacity": 1, "players": []},
+    "LCB": {"capacity": 1, "players": []},
+    "RCB": {"capacity": 1, "players": []},
+    "LCM": {"capacity": 1, "players": []},
+    "RCM": {"capacity": 1, "players": []},
+    "LM":  {"capacity": 1, "players": []},
+    "RM":  {"capacity": 1, "players": []},
+    "LST": {"capacity": 1, "players": []},
+    "RST": {"capacity": 1, "players": []},
+}
 
-formation = ["GK", "LB", "CB", "RB", "ST"]
+# Expand slots by capacity — a slot needing 2 players becomes slot_0 and slot_1
+expanded_slots = []
+for slot, info in formation_slots.items():
+    for i in range(info["capacity"]):
+        expanded_slots.append(f"{slot}_{i}" if info["capacity"] > 1 else slot)
 
+# Build slot → eligible player IDs mapping
+def get_eligible(slot_name):
+    base = slot_name.split("_")[0]  # strip _0, _1 suffix if present
+    return [p["Id"] for p in players if base in p["Positions"]]
+
+# --- Build the problem ---
 problem = Problem()
 
-for p in players2:
-    # Here the domain is the list of positions they CAN play
-    problem.addVariable(p["name"], p["pos_prefs"])
-    
-#    for pos in list(p["pos_prefs"].keys()):
-#        problem.addConstraint(pos,p["name"])
+for slot in expanded_slots:
+    eligible = get_eligible(slot)
+    if not eligible:
+        print(f"WARNING: no player can fill {slot}")
+    problem.addVariable(slot, eligible)
 
-def new_formation_constraint(*assigned_positions):
-    assigned = {}
-    for key in list(formation_obj.keys()):
-        assigned[key] = 0
-    for pos in assigned_positions:
-        assigned[pos] += 1
-    return comp(assigned,formation_obj)
+# No player assigned to more than one slot
+problem.addConstraint(AllDifferentConstraint(), expanded_slots)
 
-def comp(assigned, formation):
-    for key in list(formation.keys()):
-        if(assigned[key] < formation[key]):
-            return False
-    return True
-
-#problem.addConstraint(formation_constraint, list([player["name"] for player in players]))
-problem.addConstraint(new_formation_constraint, list([player["name"] for player in players2]))
-
-solutions = problem.getSolutions()
-print(f"found {len(solutions)} solutions")
+# --- Score: preference rank, lower is better ---
 def calculate_score(solution):
-    """Lower score is better (Total Rank Sum)"""
-    total_rank = 0
-    for p_name, pos  in solution.items():
-        for player in players2:
-            if player["name"] == p_name:
-                total_rank += 3 - linear_search(player["pos_prefs"], pos)
-                if ("L" in pos and player["foot"] == "Left") or ("R" in pos and player["foot"] == "Right"):
-                    total_rank += 2
-                break
-    return total_rank
+    total = 0
+    for slot, player_id in solution.items():
+        player = next(p for p in players if p["Id"] == player_id)
+        base = slot.split("_")[0]
+        rank = player["Positions"].index(base)
+        total += rank
+    return total
 
-def linear_search(array, element):
-    i = 0
-    for e in array:
-        if(e == element):
-            return i
-        i += 1
-    return -1
+# --- Solve ---
+print("Solving...\n")
+solutions = problem.getSolutions()
+print(f"Found {len(solutions)} valid lineups\n")
 
-# Sort solutions by the best priority match
-optimized_solutions = sorted(solutions, key=calculate_score)
+if solutions:
+    best = sorted(solutions, key=calculate_score)[0]
+    score = calculate_score(best)
 
+    # Collect starting XI player IDs
+    starting_ids = set(best.values())
 
-if optimized_solutions:
-    best = optimized_solutions[len(optimized_solutions)-1]
-    print(f"Best Lineup (Score: {calculate_score(best)}):")
-    for pos, player in best.items():
-        print(f"{pos}: {player}")
+    # Build substitutes list
+    substitutes = [p for p in players if p["Id"] not in starting_ids]
+
+    print(f"Starting XI (preference score: {score}):")
+    print(f"{'Slot':<8} {'Player ID':<12} {'Preference'}")
+    print("-" * 35)
+    for slot, player_id in sorted(best.items()):
+        player = next(p for p in players if p["Id"] == player_id)
+        base = slot.split("_")[0]
+        rank = player["Positions"].index(base)
+        pref_label = ["1st", "2nd", "3rd"][rank]
+        print(f"  {slot:<8} Player {player_id:<6} {pref_label} choice")
+
+    print(f"\nSubstitutes ({len(substitutes)} players):")
+    print("-" * 35)
+    for p in substitutes:
+        print(f"  Player {p['Id']:<4} can play: {', '.join(p['Positions'])}")
 else:
-    print("No valid lineup found with current constraints.")
+    print("No valid lineup found.")
