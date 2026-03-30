@@ -1,9 +1,5 @@
 # formation-assignmen
 
-Run the following 
-- pip install fastapi 
-- pip install uvicorn
+Run 
+docker build -t python-service .
 
-to run the app 
-- uvicorn main:app --reload
- 
