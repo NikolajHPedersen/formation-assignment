@@ -23,6 +23,21 @@ players = [
     {"Id": 19, "Lfoot": False, "Positions": ["RST", "RCM", "RCB"]},
     {"Id": 20, "Lfoot": True,  "Positions": ["LST", "LCM", "LCB"]},
 ]
+'''
+GK = Goal keeper
+LB = Left back
+RB = Right back
+CB = Center back
+CM = Center midfielder
+RM = Right midfielder
+LM = Left midfielder
+ST = Striker
+LW = Left wing
+RW = Right wing
+'''
+
+
+formation_obj = {"GK":1,"LB":1,"RB":1,"CB":2,"CM":1,"RM":1,"LM":1,"ST":1, "LW":1, "RW":1}
 
 # Each slot has a capacity — how many players it needs
 formation_slots = {
