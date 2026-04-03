@@ -6,7 +6,14 @@ from pathlib import Path
 
 from ortools.sat.python import cp_model
 
-from data_class import AssignmentBreakdown, AssignmentResult, FormationSlot, LineupSolution, Player, normalize_role
+from data_class import (
+    AssignmentBreakdown,
+    AssignmentResult,
+    FormationSlot,
+    LineupSolution,
+    Player,
+    normalize_role,
+)
 
 
 # TODO: FORMATION_TEMPLATES should be loaded from db or api. ROLE_ATTRIBUTE_WEIGHTS should be associated to each formation.
@@ -24,7 +31,14 @@ ROLE_ATTRIBUTE_WEIGHTS: dict[str, dict[str, int]] = {
     "RB": {"pace": 3, "passing": 2, "dribbling": 1, "defending": 4, "physical": 2},
     "CB": {"pace": 1, "passing": 1, "defending": 5, "physical": 4},
     "CDM": {"passing": 3, "dribbling": 1, "defending": 4, "physical": 2},
-    "CM": {"pace": 1, "shooting": 1, "passing": 4, "dribbling": 2, "defending": 2, "physical": 1},
+    "CM": {
+        "pace": 1,
+        "shooting": 1,
+        "passing": 4,
+        "dribbling": 2,
+        "defending": 2,
+        "physical": 1,
+    },
     "CAM": {"pace": 1, "shooting": 2, "passing": 4, "dribbling": 4},
     "LM": {"pace": 3, "shooting": 1, "passing": 3, "dribbling": 3},
     "RM": {"pace": 3, "shooting": 1, "passing": 3, "dribbling": 3},
@@ -64,24 +78,38 @@ STATUS_NAMES = {
     cp_model.UNKNOWN: "UNKNOWN",
 }
 
+toggle_attribute_weights = False
+if toggle_attribute_weights is False:
+    ROLE_ATTRIBUTE_WEIGHTS = {
+        role: {attr: 1 for attr in attrs}
+        for role, attrs in ROLE_ATTRIBUTE_WEIGHTS.items()
+    }
+
+
 AssignmentKey = tuple[int, int]  # the player index and the slot index
 
 
 def safe_name(value: str) -> str:
-    return "".join(character.lower() if character.isalnum() else "_" for character in value).strip("_")
+    return "".join(
+        character.lower() if character.isalnum() else "_" for character in value
+    ).strip("_")
 
 
 def build_formation_slots(formation_name: str) -> list[FormationSlot]:
     template = FORMATION_TEMPLATES.get(formation_name)
     if template is None:  # hvis formationen ikke er lavet/findes
         supported = ", ".join(sorted(FORMATION_TEMPLATES))
-        raise ValueError(f"Unsupported formation {formation_name!r}. Supported formations: {supported}")
+        raise ValueError(
+            f"Unsupported formation {formation_name!r}. Supported formations: {supported}"
+        )
 
     role_counts: defaultdict[str, int] = defaultdict(int)
     slots: list[FormationSlot] = []
     for role in template:
         normalized_role = normalize_role(role)
-        role_counts[normalized_role] += 1  # tæller hvor mange gange en rolle optræder i formationen
+        role_counts[
+            normalized_role
+        ] += 1  # tæller hvor mange gange en rolle optræder i formationen
         slots.append(
             FormationSlot(  # laver en slot for hver rolle i formationen
                 slot_id=f"{normalized_role}{role_counts[normalized_role]}",  # slot_id er rolen + antallet af gange den optræder i formationen
@@ -122,7 +150,9 @@ def footedness_score(player: Player, role: str) -> int:
     return WRONG_FOOT_PENALTY
 
 
-def build_assignment_breakdown(player: Player, slot: FormationSlot) -> AssignmentBreakdown:
+def build_assignment_breakdown(
+    player: Player, slot: FormationSlot
+) -> AssignmentBreakdown:
     preference = preference_score(player, slot.role)
     attributes = attribute_score(player, slot.role)
     footedness = footedness_score(player, slot.role)
@@ -142,7 +172,9 @@ def build_players_from_data_file(data_dir: Path, file_name: str) -> list[Player]
 
 
 # returnerer en dict med assignment breakdown (preference, attributes, footedness, total) for hver player og slot
-def _build_score_lookup(players: list[Player], slots: list[FormationSlot]) -> dict[AssignmentKey, AssignmentBreakdown]:
+def _build_score_lookup(
+    players: list[Player], slots: list[FormationSlot]
+) -> dict[AssignmentKey, AssignmentBreakdown]:
     return {
         (player_index, slot_index): build_assignment_breakdown(player, slot)
         for player_index, player in enumerate[Player](players)
@@ -150,9 +182,13 @@ def _build_score_lookup(players: list[Player], slots: list[FormationSlot]) -> di
     }
 
 
-def _create_assignment_vars(model: cp_model.CpModel, players: list[Player], slots: list[FormationSlot]) -> dict[AssignmentKey, cp_model.IntVar]:
+def _create_assignment_vars(
+    model: cp_model.CpModel, players: list[Player], slots: list[FormationSlot]
+) -> dict[AssignmentKey, cp_model.IntVar]:
     return {  # laver en dict med assignment vars for hver player og slot
-        (player_index, slot_index): model.new_bool_var(f"assign_{safe_name(player.name)}_to_{slot.slot_id.lower()}")
+        (player_index, slot_index): model.new_bool_var(
+            f"assign_{safe_name(player.name)}_to_{slot.slot_id.lower()}"
+        )
         for player_index, player in enumerate[Player](players)
         for slot_index, slot in enumerate[FormationSlot](slots)
     }
@@ -162,19 +198,25 @@ def _add_assignment_constraints(
     model: cp_model.CpModel,
     players: list[Player],
     slots: list[FormationSlot],
-    assignment_vars: dict[AssignmentKey, cp_model.IntVar],  # dict med assignment vars for hver player og slot
+    assignment_vars: dict[
+        AssignmentKey, cp_model.IntVar
+    ],  # dict med assignment vars for hver player og slot
 ) -> None:
     for slot_index in range(len(slots)):
         vars_for_slot = []
         for player_index in range(len(players)):
             vars_for_slot.append(assignment_vars[player_index, slot_index])
-        model.add_exactly_one(vars_for_slot)  # tilføjer en constraint således at hver slot har en player
+        model.add_exactly_one(
+            vars_for_slot
+        )  # tilføjer en constraint således at hver slot har en player
 
     for player_index in range(len(players)):
         vars_for_player = []
         for slot_index in range(len(slots)):
             vars_for_player.append(assignment_vars[player_index, slot_index])
-        model.add_at_most_one(vars_for_player)  # tilføjer en constraint således at hver player har højst én slot
+        model.add_at_most_one(
+            vars_for_player
+        )  # tilføjer en constraint således at hver player har højst én slot
 
 
 def _extract_assignments(
@@ -203,25 +245,36 @@ def _extract_assignments(
 def solve_lineup(players: list[Player], formation_name: str) -> LineupSolution:
     slots = build_formation_slots(formation_name)
     if len(players) < len(slots):
-        raise ValueError(f"The squad needs at least {len(slots)} players for formation {formation_name}.")
+        raise ValueError(
+            f"The squad needs at least {len(slots)} players for formation {formation_name}."
+        )
 
     model = cp_model.CpModel()  # modellen som skal løses
     score_lookup = _build_score_lookup(players, slots)
     assignment_vars = _create_assignment_vars(model, players, slots)
-    _add_assignment_constraints(model, players, slots, assignment_vars)  # tilføjer constraints til modellen
+    _add_assignment_constraints(
+        model, players, slots, assignment_vars
+    )  # tilføjer constraints til modellen
 
     objective_terms = []
     for player_index in range(len(players)):
         for slot_index in range(len(slots)):
-            objective_terms.append(score_lookup[player_index, slot_index].total * assignment_vars[player_index, slot_index])
+            objective_terms.append(
+                score_lookup[player_index, slot_index].total
+                * assignment_vars[player_index, slot_index]
+            )
     model.maximize(sum(objective_terms))  # maksimerer total score
 
     solver = cp_model.CpSolver()
     status = solver.solve(model)
     if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
-        raise RuntimeError(f"No valid lineup found. Solver status: {STATUS_NAMES.get(status, str(status))}")
+        raise RuntimeError(
+            f"No valid lineup found. Solver status: {STATUS_NAMES.get(status, str(status))}"
+        )
 
-    assignments = _extract_assignments(solver, players, slots, assignment_vars, score_lookup)
+    assignments = _extract_assignments(
+        solver, players, slots, assignment_vars, score_lookup
+    )
     return LineupSolution(
         formation_name=formation_name,
         assignments=assignments,
